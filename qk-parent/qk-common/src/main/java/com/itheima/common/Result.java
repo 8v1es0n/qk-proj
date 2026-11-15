@@ -33,5 +33,4 @@ public class Result {
         result.code = 0;
         return result;
     }
-
 }

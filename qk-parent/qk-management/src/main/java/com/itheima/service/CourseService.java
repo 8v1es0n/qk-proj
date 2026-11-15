@@ -3,6 +3,8 @@ package com.itheima.service;
 import com.itheima.common.PageResult;
 import com.itheima.entity.Course;
 
+import java.util.List;
+
 public interface CourseService {
     /**
      * 新增课程
@@ -39,4 +41,11 @@ public interface CourseService {
      * @param course  课程信息
      */
     void updateCourse(Course course);
+
+    /**
+     * 根据课程学科查询课程
+     * @param subject 课程所属的学科
+     * @return  返回结果
+     */
+    List<Course> queryBySubject(Integer subject);
 }

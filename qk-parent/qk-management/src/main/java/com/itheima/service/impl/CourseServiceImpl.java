@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Service
@@ -55,5 +56,12 @@ public class CourseServiceImpl implements CourseService {
     public void updateCourse(Course course) {
         course.setUpdateTime(LocalDateTime.now().withNano(0));
         courseMapper.updateById(course);
+    }
+
+    @Override
+    public List<Course> queryBySubject(Integer subject) {
+        LambdaQueryWrapper<Course> courseLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        courseLambdaQueryWrapper.eq(subject != null, Course::getSubject, subject);
+        return courseMapper.selectList(courseLambdaQueryWrapper);
     }
 }

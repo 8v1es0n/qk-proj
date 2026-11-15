@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/courses")
@@ -79,5 +81,16 @@ public class CourseController {
     public Result updateCourse(@RequestBody Course course){
         courseService.updateCourse(course);
         return Result.success();
+    }
+
+    /**
+     * 根据课程学科查询课程
+     * @param subject 课程所属的学科
+     * @return  返回结果
+     */
+    @GetMapping("/subject/{subject}")
+    public Result queryBySubject(@PathVariable Integer subject){
+        List<Course> subjectList = courseService.queryBySubject(subject);
+        return Result.success(subjectList);
     }
 }
