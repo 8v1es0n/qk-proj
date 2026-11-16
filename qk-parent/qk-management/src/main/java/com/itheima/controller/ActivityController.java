@@ -29,10 +29,10 @@ public class ActivityController {
      * @return  返回查询到的结果
      */
     @GetMapping
-    public Result pageQueryActivity(Integer channel, Integer type,
+    public Result pageQueryActivity(Integer channel, Integer type, Integer status,
                                     @RequestParam(defaultValue="1") Integer page,
                                     @RequestParam(defaultValue="10") Integer pageSize){
-        PageResult<Activity> pageResult = activityService.pageQueryActivity(channel, type, page, pageSize);
+        PageResult<Activity> pageResult = activityService.pageQueryActivity(channel, type, status, page, pageSize);
         return Result.success(pageResult);
     }
 

@@ -19,11 +19,12 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
 
 
     @Override
-    public PageResult<Activity> pageQueryActivity(Integer channel, Integer type, Integer page, Integer pageSize) {
+    public PageResult<Activity> pageQueryActivity(Integer channel, Integer type, Integer status, Integer page, Integer pageSize) {
         Page<Activity> activityPage = new Page<>(page, pageSize);
         LambdaQueryWrapper<Activity> activityLambdaQueryWrapper = new LambdaQueryWrapper<>();
         activityLambdaQueryWrapper.eq(channel != null, Activity::getChannel, channel)
-                .eq(type != null, Activity::getType, type);
+                .eq(type != null, Activity::getType, type)
+                .eq(status != null, Activity::getStatus, status);
 
         activityPage = activityMapper.selectPage(activityPage, activityLambdaQueryWrapper);
         return new PageResult<>(activityPage.getTotal(), activityPage.getRecords());

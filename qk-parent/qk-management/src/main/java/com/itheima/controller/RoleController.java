@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/roles")
 @Tag(name = "角色管理")
@@ -74,5 +76,15 @@ public class RoleController {
     public Result updateRole(@RequestBody Role role){
         roleService.updateRole(role);
         return Result.success();
+    }
+
+    /**
+     * 查询所有角色
+     * @return  返回结果
+     */
+    @GetMapping("/list")
+    public Result queryRoleList(){
+        List<Role> roleList = roleService.queryRoleList();
+        return Result.success(roleList);
     }
 }

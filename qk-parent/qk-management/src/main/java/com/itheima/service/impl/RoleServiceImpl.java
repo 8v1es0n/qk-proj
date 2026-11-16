@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -40,6 +41,11 @@ public class RoleServiceImpl implements RoleService {
     public void updateRole(Role role) {
         role.setUpdateTime(LocalDateTime.now().withNano(0));
         roleMapper.updateById(role);
+    }
+
+    @Override
+    public List<Role> queryRoleList() {
+        return roleMapper.selectList(null);
     }
 
     @Override

@@ -1,0 +1,7 @@
+#阿里云OSS配置
+qk:
+  oss:
+    endpoint: oss-cn-beijing.aliyuncs.com
+    bucketName: your-bucket-name
+    accessKeyId: your-accessKey-Id
+    accessKeySecret: your-accessKey-Secret

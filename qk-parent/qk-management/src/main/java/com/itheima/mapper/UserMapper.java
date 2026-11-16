@@ -1,0 +1,20 @@
+package com.itheima.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.itheima.dto.UserDTO;
+import com.itheima.entity.User;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+
+@Mapper
+public interface UserMapper extends BaseMapper<User> {
+
+    IPage<User> pageQueryUser(Page<User> userPage, UserDTO userDTO);
+
+    @Select("SELECT u.* FROM sys_user u INNER JOIN role r ON u.role_id = r.id WHERE r.label = #{roleLabel}")
+    List<User> queryByRoleLabel(String roleLabel);
+}

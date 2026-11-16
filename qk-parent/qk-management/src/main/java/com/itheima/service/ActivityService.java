@@ -15,7 +15,7 @@ public interface ActivityService extends IService<Activity> {
      * @param pageSize  每页记录数
      * @return  返回查询到的结果
      */
-    PageResult<Activity> pageQueryActivity(Integer channel, Integer type, Integer page, Integer pageSize);
+    PageResult<Activity> pageQueryActivity(Integer channel, Integer type, Integer status, Integer page, Integer pageSize);
 
     /**
      * 根据活动类型查询

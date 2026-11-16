@@ -3,6 +3,8 @@ package com.itheima.service;
 import com.itheima.common.PageResult;
 import com.itheima.entity.Role;
 
+import java.util.List;
+
 public interface RoleService {
     /**
      * 使用分页进行条件查询角色
@@ -17,7 +19,6 @@ public interface RoleService {
     /**
      * 新增角色
      * @param role  角色信息
-     * @return  返回结果
      */
     void addRole(Role role);
 
@@ -39,4 +40,10 @@ public interface RoleService {
      * @param role  角色信息
      */
     void updateRole(Role role);
+
+    /**
+     * 查询所有角色
+     * @return  返回结果
+     */
+    List<Role> queryRoleList();
 }
