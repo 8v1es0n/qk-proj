@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -30,7 +30,7 @@ public class User {
     /**
      * 密码
      */
-    @JsonIgnore //给前端返回时忽略该字段
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // 只在给前端返回时忽略该字段
     private String password;
 
     /**

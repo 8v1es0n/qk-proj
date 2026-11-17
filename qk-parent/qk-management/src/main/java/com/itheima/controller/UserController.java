@@ -2,6 +2,7 @@ package com.itheima.controller;
 
 import com.itheima.common.PageResult;
 import com.itheima.common.Result;
+import com.itheima.common.utils.OssFileUpload;
 import com.itheima.dto.UserDTO;
 import com.itheima.entity.User;
 import com.itheima.service.UserService;
@@ -21,6 +22,8 @@ import java.util.Set;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private OssFileUpload ossFileUpload;
 
 
     /**
@@ -41,8 +44,13 @@ public class UserController {
      */
     @PostMapping
     public Result addUser(@RequestBody User user){
-        userService.addUser(user);
-        return Result.success();
+        boolean flag = userService.addUser(user);
+        if (flag){
+            return Result.success();
+        } else {
+            ossFileUpload.delete(user.getImage());
+            return Result.error("用户添加失败");
+        }
     }
 
     /**
@@ -52,7 +60,15 @@ public class UserController {
      */
     @DeleteMapping("/{ids}")
     public Result deleteUserByIds(@PathVariable Set<Integer> ids){
-        userService.removeByIds(ids);
+        for (Integer id : ids) {
+            User user = userService.getById(id);
+            boolean flag = userService.removeById(id);
+            if (flag && !user.getImage().isEmpty()){
+                ossFileUpload.delete(user.getImage());
+            } else {
+                return Result.error("删除用户意外中断");
+            }
+        }
         return Result.success();
     }
 
@@ -97,5 +113,16 @@ public class UserController {
     public Result queryByRoleLabel(@PathVariable String roleLabel){
         List<User> users = userService.queryByRoleLabel(roleLabel);
         return Result.success(users);
+    }
+
+    /**
+     * 根据部门id查询用户
+     * @param deptId    部门id
+     * @return      返回结果
+     */
+    @GetMapping("/dept/{deptId}")
+    public Result queryDeptId(@PathVariable Integer deptId){
+        List<User> userList = userService.queryDeptId(deptId);
+        return Result.success(userList);
     }
 }

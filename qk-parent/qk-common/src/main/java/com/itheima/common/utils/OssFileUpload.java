@@ -55,4 +55,15 @@ public class OssFileUpload {
         }
         return "image/jpg";
     }
+
+    //文件删除
+    public void delete(String objectName) {
+        OSS ossClient = new OSSClientBuilder().build(ossProperties.getEndpoint(),
+                ossProperties.getAccessKeyId(), ossProperties.getAccessKeySecret());
+        String stringBuilder = "https://" + ossProperties.getBucketName() + "." + ossProperties.getEndpoint() + "/";
+        objectName = objectName.replace(stringBuilder, "");
+        ossClient.deleteObject(ossProperties.getBucketName(), objectName);
+        //关闭客户端
+        ossClient.shutdown();
+    }
 }
