@@ -14,6 +14,7 @@ import java.util.UUID;
 public class OssFileUpload {
     @Autowired
     private OssProperties ossProperties;
+    // TODO ossClient 应该交给生命周期管理, 避免资源消耗
 
     //文件上传
     public String upload(String fileName, InputStream inputStream) {

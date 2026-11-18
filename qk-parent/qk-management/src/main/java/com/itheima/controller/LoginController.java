@@ -1,7 +1,7 @@
 package com.itheima.controller;
 
 import com.itheima.common.Result;
-import com.itheima.entity.User;
+import com.itheima.dto.LoginDTO;
 import com.itheima.service.UserService;
 import com.itheima.vo.LoginResultVO;
 import lombok.extern.slf4j.Slf4j;
@@ -19,13 +19,13 @@ public class LoginController {
 
     /**
      * 用户登录
-     * @param user  用户信息
+     * @param loginDTO  用户登录信息
      * @return  返回结果
      */
     @PostMapping("/login")
-    public Result login(@RequestBody User user) {
-        log.info("用户登录请求: {}", user);
-        LoginResultVO loginResult = userService.login(user.getUsername(), user.getPassword());
+    public Result login(@RequestBody LoginDTO loginDTO) {
+        log.info("用户登录请求: {}", loginDTO);
+        LoginResultVO loginResult = userService.login(loginDTO.getUsername(), loginDTO.getPassword());
         return Result.success(loginResult);
     }
 }

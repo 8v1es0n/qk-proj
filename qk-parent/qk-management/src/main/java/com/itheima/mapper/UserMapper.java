@@ -19,6 +19,6 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT u.* FROM sys_user u INNER JOIN role r ON u.role_id = r.id WHERE r.label = #{roleLabel}")
     List<User> queryByRoleLabel(String roleLabel);
 
-    @Select("select u.*, r.label from sys_user u left join role r on u.role_id = r.id where u.username = #{username}")
+    @Select("select u.*, r.label as role_label from sys_user u left join role r on u.role_id = r.id where u.username = #{username}")
     LoginResultVO queryByUsername(String username);
 }

@@ -64,6 +64,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             String token = JwtUtil.generateToken(claims);
             // 构造登录结果
             vo.setToken(token);
+            // 避免密码泄露
+            vo.setPassword("");
             return vo;
         }
     }
