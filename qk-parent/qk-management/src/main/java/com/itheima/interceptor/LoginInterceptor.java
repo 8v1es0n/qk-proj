@@ -3,6 +3,7 @@ package com.itheima.interceptor;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import com.itheima.common.utils.JwtUtil;
+import com.itheima.common.utils.UserHolder;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -37,6 +38,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         }
         try {
             Claims claims = JwtUtil.parseToken(token);
+            Integer userId = claims.get("id", Integer.class);
+            UserHolder.setCurrentUser(userId);
         } catch (Exception e) {
             log.info("token不合法");
             response.setStatus(HttpStatus.HTTP_UNAUTHORIZED);
@@ -66,5 +69,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
         System.out.println("afterCompletion ....");
+        //用户删除
+        UserHolder.removeCurrentUser();
     }
 }
