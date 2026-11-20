@@ -26,4 +26,21 @@
         </where>
         order by c.update_time desc
     </select>
+    <select id="getPoolClues" resultType="com.itheima.entity.Clue">
+        SELECT c.*, a.name AS activityName
+        FROM clue c
+        LEFT JOIN activity a ON c.activity_id = a.id
+        <where>
+            <if test="cluePoolDTO.clueId != null">
+                AND c.id = #{cluePoolDTO.clueId}
+            </if>
+            <if test="cluePoolDTO.phone != null and cluePoolDTO.phone != ''">
+                AND c.phone LIKE CONCAT('%',#{cluePoolDTO.phone}, '%')
+            </if>
+            <if test="cluePoolDTO.channel != null">
+                AND c.channel = #{cluePoolDTO.channel}
+            </if>
+        </where>
+        ORDER BY c.update_time DESC
+    </select>
 </mapper>
