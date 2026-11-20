@@ -1,12 +1,18 @@
 package com.itheima.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.itheima.aspect.anno.LogOperation;
 import com.itheima.common.PageResult;
 import com.itheima.common.utils.UserHolder;
+import com.itheima.dto.CluePoolDTO;
 import com.itheima.dto.ClueQueryDTO;
+import com.itheima.dto.MarkFalseClueDTO;
+import com.itheima.entity.Business;
 import com.itheima.entity.Clue;
 import com.itheima.entity.ClueTrackRecord;
+import com.itheima.mapper.BusinessMapper;
 import com.itheima.mapper.ClueMapper;
 import com.itheima.mapper.ClueTrackRecordMapper;
 import com.itheima.service.ClueService;
@@ -24,6 +30,8 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue> implements Cl
     private ClueMapper clueMapper;
     @Autowired
     private ClueTrackRecordMapper clueTrackRecordMapper;
+    @Autowired
+    private BusinessMapper businessMapper;
 
 
     @Override
@@ -85,4 +93,50 @@ public class ClueServiceImpl extends ServiceImpl<ClueMapper, Clue> implements Cl
         clueTrackRecordMapper.insert(trackRecord);
     }
 
+    @Override
+    @Transactional
+    public void convertToBusiness(Integer id) {
+        // 1. 修改线索信息
+        Clue clue = this.getById(id);
+        clue.setStatus(5); //转为商机
+        this.updateById(clue);
+
+        // 2. 创建商机信息
+        Business business = BeanUtil.copyProperties(clue, Business.class);
+        business.setUserId(null); //  设置商机归属人为空
+        business.setNextTime(null); //  设置下次联系时间为空
+        business.setStatus(1);
+        business.setClueId(clue.getId());
+
+        // 3. 插入商机记录
+        businessMapper.insert(business);
+    }
+
+    @Override
+    @LogOperation
+    public void markFalseClue(Integer id, MarkFalseClueDTO mfc) {
+        // 1. 修改线索状态为"伪线索"
+        Clue clue = new Clue();
+        clue.setId(id);
+        clue.setStatus(4); // 状态值 4 表示伪线索
+        clue.setUpdateTime(LocalDateTime.now());
+        this.updateById(clue);
+
+        // 2. 添加跟进记录
+        ClueTrackRecord trackRecord = new ClueTrackRecord();
+        trackRecord.setClueId(id);
+        trackRecord.setUserId(UserHolder.getCurrentUser()); // 当前登录用户ID
+        trackRecord.setType(0); // 类型 0 表示伪线索
+        trackRecord.setFalseReason(mfc.getReason());
+        trackRecord.setRecord(mfc.getRemark());
+        trackRecord.setCreateTime(LocalDateTime.now());
+        clueTrackRecordMapper.insert(trackRecord);
+    }
+
+    @Override
+    public PageResult<Clue> getPoolClues(CluePoolDTO cluePoolDTO) {
+        Page<Clue> page = new Page<>(cluePoolDTO.getPage(), cluePoolDTO.getPageSize());
+        page = baseMapper.getPoolClues(page, cluePoolDTO);
+        return new PageResult<>(page.getTotal(), page.getRecords());
+    }
 }

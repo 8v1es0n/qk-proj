@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itheima.mapper.ReportMapper">
+    <!-- 获取线索和商机总览数据 -->
+    <select id="getOverviewData" resultType="com.itheima.vo.OverviewVO">
+        SELECT
+            c.clue_total,
+            c.clue_wait_allot,
+            c.clue_wait_follow,
+            c.clue_following,
+            c.clue_false,
+            c.clue_convert_business,
+            b.business_total,
+            b.business_wait_allot,
+            b.business_wait_follow,
+            b.business_following,
+            b.business_false,
+            b.business_convert_customer
+        FROM
+            (
+                SELECT
+                    count(1) as clue_total,
+                    count(case when status = 1 then 1 end) as clue_wait_allot,
+                    count(case when status = 2 then 1 end) as clue_wait_follow,
+                    count(case when status = 3 then 1 end) as clue_following,
+                    count(case when status = 4 then 1 end) as clue_false,
+                    count(case when status = 5 then 1 end) as clue_convert_business
+                FROM clue
+            ) c
+                CROSS JOIN
+            (
+                SELECT
+                    count(1) as business_total,
+                    count(case when status = 1 then 1 end) as business_wait_allot,
+                    count(case when status = 2 then 1 end) as business_wait_follow,
+                    count(case when status = 3 then 1 end) as business_following,
+                    count(case when status = 4 then 1 end) as business_false,
+                    count(case when status = 5 then 1 end) as business_convert_customer
+                FROM business
+            ) b
+    </select>
+</mapper>
